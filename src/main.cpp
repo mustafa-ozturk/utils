@@ -1,13 +1,17 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 void echo(int argc, char *argv[]);
+void cat(int argc, char *argv[]);
 
 int main(int argc, char *argv[]) {
     if (std::string(argv[1]) == "echo") {
         echo(argc, argv);
+    } else if (std::string(argv[1]) == "cat") {
+        cat(argc, argv);
     } else {
-        std::cout << "Available commands: \n echo <text> \n";
+        std::cout << "Available commands: \n echo <text> \n cat <./path/to/file> \n";
     }
     return 0;
 }
@@ -17,4 +21,16 @@ void echo(int argc, char *argv[]){
         std::cout << argv[i] << " ";
     }
     std::cout << std::endl;
+}
+
+void cat(int argc, char *argv[]) {
+    std::ifstream file;
+    file.open(argv[2]);
+
+    std::string line;
+    if (file.is_open()) {
+        while (std::getline(file, line, '\n')) {
+            std::cout << line << std::endl;
+        }
+    }
 }
