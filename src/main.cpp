@@ -47,13 +47,21 @@ void cat(int argc, char *argv[]) {
 
 void ls(int argc, char *argv[]) {
     std::string path = argv[2];
+    std::vector<std::string> filePaths;
     for (const auto &entry : std::filesystem::directory_iterator(path)) {
         std::string filePath = entry.path().string();
         std::string parsedFileName = filePath.substr(path.length(),filePath.length());
-        if (parsedFileName.substr(0, 1) != ".") {
-            // TODO: dont put spaces if its the last file 
-            std::cout << parsedFileName << "  ";
+        filePaths.push_back(parsedFileName);
+    }
+
+    for (int i = 0; i < filePaths.size(); i++ ) {
+        if (filePaths[i].substr(0, 1) != ".") {
+            std::cout << filePaths[i];
+            if (i != filePaths.size() - 1) {
+                 std::cout << "  ";
+            }
         }
     }
+
     std::cout << std::endl;
 }
