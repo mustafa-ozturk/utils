@@ -1,17 +1,27 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <filesystem>
+#include <vector>
+
+
 
 void echo(int argc, char *argv[]);
 void cat(int argc, char *argv[]);
+void ls(int argc, char *argv[]);
 
 int main(int argc, char *argv[]) {
     if (std::string(argv[1]) == "echo") {
         echo(argc, argv);
     } else if (std::string(argv[1]) == "cat") {
         cat(argc, argv);
+    } else if (std::string(argv[1]) == "ls") {
+        ls(argc, argv);
     } else {
-        std::cout << "Available commands: \n echo <text> \n cat <./path/to/file> \n";
+        std::cout << "Available commands: \n" 
+                  << "echo <text> \n"
+                  << "cat </path/to/file> \n"
+                  << "ls </path/to/directory> \n";
     }
     return 0;
 }
@@ -33,4 +43,17 @@ void cat(int argc, char *argv[]) {
             std::cout << line << std::endl;
         }
     }
+}
+
+void ls(int argc, char *argv[]) {
+    std::string path = argv[2];
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        std::string filePath = entry.path().string();
+        std::string parsedFileName = filePath.substr(path.length(),filePath.length());
+        if (parsedFileName.substr(0, 1) != ".") {
+            // TODO: dont put spaces if its the last file 
+            std::cout << parsedFileName << "  ";
+        }
+    }
+    std::cout << std::endl;
 }
