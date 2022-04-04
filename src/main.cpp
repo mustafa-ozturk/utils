@@ -45,14 +45,51 @@ void echo(int argc, char *argv[]){
 }
 
 void cat(int argc, char *argv[]) {
+    int start = 0;
+    int end = 0;
+
+    if (argv[3]) {
+        std::string range = argv[3];
+        std::string startstr = "";
+        std::string endstr = "";
+        bool foundColon = false;
+        for (char& c : range) {
+            if (c == ':') {
+                foundColon = true;
+                continue;
+            }
+            if (!foundColon) {
+                startstr += c;
+            } else if (foundColon) {
+                endstr += c;
+            }
+        }
+        start = std::stoi(startstr);
+        end = std::stoi(endstr);
+    }
+
     std::ifstream file;
     file.open(argv[2]);
 
+    std::vector<std::string> vec_line;
     std::string line;
     if (file.is_open()) {
+        // why does this need to be in a while loop?
         while (std::getline(file, line, '\n')) {
-            std::cout << line << std::endl;
+            if (start == 0 && end == 0 ) {
+                std::cout << line << std::endl;
+            } else {
+                vec_line.push_back(line);
+            }
         }
+    }
+
+    if (start == 0 && end == 0 ) {
+        return;
+    }
+
+    for(int i = start; i < end; i++) {
+        std::cout << i << ": " << vec_line[i] << std::endl;
     }
 }
 
